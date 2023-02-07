@@ -1,27 +1,22 @@
 name: Deploy
-
-on: push
+on: [push]
 
 jobs:
   deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-
     permissions:
-      id-token: write
-      contents: read
+      id-token: write # Needed for auth with Deno Deploy
+      contents: read # Needed to clone the repository
 
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
 
-      - name: Install Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
+      # TODO: add a build step here
 
-      - name: Deploy to Deno Deploy
+      - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
           project: "georgebankoff-my-project"
-          root: dist
-          entrypoint: https://deno.land/std@0.157.0/http/file_server.ts
+          entrypoint: "./main.ts" # TODO: update entrypoint
